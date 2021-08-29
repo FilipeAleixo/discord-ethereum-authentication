@@ -1,6 +1,6 @@
 {
   "name": "scaffold-eth-api",
-  "version": "0.1.0",
+  "version": "2.4.1",
   "description": "A TypeScript starter for Serverless Framework",
   "main": "handler.js",
   "private": true,
@@ -24,18 +24,18 @@
     "serverless-bundle": "4.0.1",
     "serverless-domain-manager": "^5.1.0",
     "serverless-dotenv-plugin": "^3.0.0",
-    "serverless-offline": "^6.8.0",
-    "serverless-iam-roles-per-function": "3.1.0"
+    "serverless-iam-roles-per-function": "3.1.0",
+    "serverless-offline": "^6.8.0"
   },
   "dependencies": {
-    "jsonwebtoken": "^8.5.1",
-    "ethers": "^5.0.17",
-    "uuidv4": "6.2.7",
-    "mailparser": "^2.3.4",
-    "mime-types": "2.1.30",
     "@aws-sdk/client-s3": "3.11.0",
     "@aws-sdk/s3-request-presigner": "3.11.0",
-    "ipfs-only-hash": "4.0.0"
+    "ethers": "^5.0.17",
+    "ipfs-only-hash": "4.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mailparser": "^2.3.4",
+    "mime-types": "2.1.30",
+    "uuidv4": "6.2.7"
   },
   "workspaces": {
     "nohoist": [
