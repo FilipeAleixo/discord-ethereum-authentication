@@ -3,6 +3,21 @@ import apiResponses from 'src/requests/apiResponses'
 
 import { authenticate, getAuthenticationChallenge } from '../lib/auth'
 
+const Discord = require('discord.js');
+
+//const client = new Discord.Client();
+
+console.log(process.env.BOT_TOKEN);
+/*
+client.login(process.env.BOT_TOKEN);
+
+client.on('ready', readyDiscord);
+
+function readyDiscord() {
+  console.log('WORKS YO');
+}
+
+*/
 
 /**
  * GET /sessions
@@ -79,6 +94,7 @@ export async function helloAuth(
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
   console.log({ event })
+
   const user = event.requestContext.authorizer.lambda.user
   return apiResponses._200({ message: `Hello ${user} you are authenticated` })
 }

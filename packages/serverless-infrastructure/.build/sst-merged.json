@@ -1,0 +1,1 @@
+{"name":"scaffold-eth-infra","type":"@serverless-stack/resources","stage":"dev","region":"us-east-2","lint":true,"typeCheck":true,"main":"lib\\index.ts"}

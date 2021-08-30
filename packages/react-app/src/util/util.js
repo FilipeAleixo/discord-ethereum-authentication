@@ -1,4 +1,4 @@
-const baseUrl = 'https://dev.ext-api.scaffoldeth.xyz/app'
+const baseUrl = 'https://dev.api.vorder.io/app'
 
 export function apiRequest({path, method = 'GET', data, accessToken}) {
   return fetch(`${baseUrl}/${path}`, {

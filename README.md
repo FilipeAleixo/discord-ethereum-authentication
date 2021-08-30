@@ -1,3 +1,8 @@
+https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&scope=bot
+
+------
+
+
 # 🏗 Scaffold-ETH
 
 > everything you need to build on Ethereum! 🚀

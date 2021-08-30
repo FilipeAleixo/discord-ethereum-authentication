@@ -1,0 +1,16 @@
+[2021-08-29T12:56:39.796] [DEBUG] default - SST: 0.40.4
+[2021-08-29T12:56:39.797] [DEBUG] default - CDK: 1.114.0
+[2021-08-29T12:56:39.799] [INFO] default - [90mPreparing your SST app[39m
+[2021-08-29T12:56:39.813] [INFO] default - 
+[2021-08-29T12:56:39.814] [ERROR] default - Mismatched versions of AWS CDK packages. Serverless Stack currently supports [1m1.114.0[22m. Fix using:
+
+[2021-08-29T12:56:39.815] [INFO] default -   npm install @aws-cdk/aws-cognito@1.114.0 @aws-cdk/aws-dynamodb@1.114.0 @aws-cdk/core@1.114.0 --save-exact
+[2021-08-29T12:56:39.815] [INFO] default -   npm install @aws-cdk/assert@1.114.0 --save-dev --save-exact
+[2021-08-29T12:56:39.816] [INFO] default - 
+Learn more about it here — https://github.com/serverless-stack/serverless-stack#cdk-version-mismatch
+
+[2021-08-29T12:56:39.817] [INFO] default - [90mDetected tsconfig.json[39m
+[2021-08-29T12:56:39.817] [INFO] default - [90mTranspiling source[39m
+[2021-08-29T12:56:39.845] [INFO] default - [90mLinting source[39m
+[2021-08-29T12:56:39.929] [INFO] default - [90mRunning type checker[39m
+[2021-08-29T12:56:39.934] [ERROR] default - There was a problem linting the source.

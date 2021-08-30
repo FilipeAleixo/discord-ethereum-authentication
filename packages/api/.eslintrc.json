@@ -11,6 +11,7 @@
   ],
   "rules": {
     "no-console": "off",
-    "semi": ["warn", "never"]
+    "semi": ["warn", "never"],
+    "@typescript-eslint/no-var-requires": 0
   }
 }

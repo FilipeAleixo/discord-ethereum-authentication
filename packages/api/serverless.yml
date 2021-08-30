@@ -1,4 +1,5 @@
 service: scaffold-eth-api
+useDotenv: true
 
 # Create an optimized package for our functions 
 package:
@@ -13,8 +14,10 @@ plugins:
 provider:
   name: aws
   runtime: nodejs14.x
-  region: ${opt:region, 'us-east-1'}
+  region: ${opt:region, 'us-east-2'}
   stage: dev
+  logs:
+    httpApi: true
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -59,7 +62,7 @@ custom:
   # Name of the SST app that's deploying our infrastructure
   sstApp: ${self:custom.stage}-scaffold-eth-infra
   customDomain:
-    domainName: ${self:custom.stage}.ext-api.scaffoldeth.xyz
+    domainName: ${self:custom.stage}.api.vorder.io
     basePath: app
     endpointType: regional
     apiType: http
