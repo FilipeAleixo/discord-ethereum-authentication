@@ -1,0 +1,9 @@
+{
+  "name": "serverless-discord-bot.commands_layer",
+  "version": "0.0.1",
+  "author": "ytausch",
+  "license": "MIT",
+  "dependencies": {
+    "slash-create": "^4.0.1"
+  }
+}

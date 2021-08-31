@@ -1,0 +1,10 @@
+{
+  "name": "serverless-discord-bot.handler",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "ytausch",
+  "license": "MIT",
+  "devDependencies": {
+    "slash-create": "^4.0.1"
+  }
+}

@@ -1,0 +1,9 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "dev-discord-interaction"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-q9hln2sd11fa"
+s3_prefix = "dev-discord-interaction"
+region = "us-east-2"
+capabilities = "CAPABILITY_IAM"

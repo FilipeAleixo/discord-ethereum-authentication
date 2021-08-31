@@ -3,22 +3,6 @@ import apiResponses from 'src/requests/apiResponses'
 
 import { authenticate, getAuthenticationChallenge } from '../lib/auth'
 
-const Discord = require('discord.js');
-
-//const client = new Discord.Client();
-
-console.log(process.env.BOT_TOKEN);
-/*
-client.login(process.env.BOT_TOKEN);
-
-client.on('ready', readyDiscord);
-
-function readyDiscord() {
-  console.log('WORKS YO');
-}
-
-*/
-
 /**
  * GET /sessions
  *
@@ -57,10 +41,35 @@ export async function nonce(
 export async function login(
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> {
+  const AWS = require("aws-sdk");
+
+  const callRoleAssignLambda = async () => {
+
+    const lambda = new AWS.Lambda({region: "us-east-2"});
+
+    return await new Promise((resolve, reject) => {
+      const params = {
+        FunctionName: "discord-role-assignment",
+        Payload: JSON.stringify({userId: "INSER_USER_ID"})
+      }
+      lambda.invoke(params, (err, results) => {
+        if(err) reject(err);
+        else resolve(results.Payload);
+      })
+    })
+  
+  }
+
+
   try {
     const { publicAddress, signature } = JSON.parse(event.body)
+    
+    
+    callRoleAssignLambda()
+
 
     const token = await authenticate(publicAddress, signature)
+
     return apiResponses._200({ token })
   } catch (e) {
     return apiResponses._400({ error: e.message })

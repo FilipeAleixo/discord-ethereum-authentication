@@ -1,0 +1,13 @@
+{
+  "name": "serverless-discord-bot.create_commands",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "ytausch",
+  "license": "MIT",
+  "dependencies": {
+    "cfn-lambda": "^5.1.0"
+  },
+  "devDependencies": {
+    "slash-create": "^4.0.1"
+  }
+}

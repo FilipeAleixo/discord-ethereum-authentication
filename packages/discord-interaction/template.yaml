@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  serverless-discord-bot
+  A Serverless Discord Bot template built with Discord Slash Commands and AWS SAM.
+
+Globals:
+  Function:
+    Runtime: nodejs14.x
+    Timeout: 3
+
+Resources:
+  CommandsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: ./src/commands_layer
+
+  CreateCommandsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/create_commands
+      Description: "Function to create Discord Slash Commands"
+      Handler: index.lambdaHandler
+      Environment:
+        Variables:
+          DISCORD_APP_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:app_id}}'
+          DISCORD_PUBLIC_KEY: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:public_key}}'
+          DISCORD_BOT_TOKEN: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:bot_token}}'
+      Layers:
+        - !Ref CommandsLayer
+
+  CreateCommandsInvoker:
+    Type: Custom::CreateCommandsInvoker
+    Properties:
+      ServiceToken: !GetAtt CreateCommandsFunction.Arn
+      # Passing the CommandsLayer ARN will cause a custom resource update every time the commands are updated.
+      # (note that the ARN of a LayerVersion Resource ends with an incrementing layer version number)
+      CommandsLayerVersion: !Ref CommandsLayer
+
+  DiscordInteractionApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: prod
+
+  DiscordHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/handler
+      Description: "Serverless Function to handle incoming Discord requests"
+      Handler: index.lambdaHandler
+      Events:
+        HelloWorld:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref DiscordInteractionApi
+            Method: post
+            Path: /event
+      Environment:
+        Variables:
+          DISCORD_APP_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:app_id}}'
+          DISCORD_PUBLIC_KEY: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:public_key}}'
+      Layers:
+        - !Ref CommandsLayer
+
+  DiscordRoleAssignFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: discord-role-assignment
+      CodeUri: ./src/role_assignment
+      Description: "Serverless Function to set the role of a given user on Discord"
+      Handler: index.lambdaHandler
+      Environment:
+        Variables:
+          DISCORD_BOT_TOKEN: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:bot_token}}'
+          SERVER_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:server_id}}'
+          CHANNEL_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:channel_id}}'
+          ROLE_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:role_id}}'
+
+Outputs:
+  DiscordInteractionApi:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${DiscordInteractionApi}.execute-api.${AWS::Region}.amazonaws.com/prod/event"
+  DiscordRoleAssignFunctionArn:
+    Description: "The ARN of the lambda function that assigns the roles on discord"
+    Value: !GetAtt DiscordRoleAssignFunction.Arn
+    Export:
+      Name: DiscordRoleAssignFunctionArn

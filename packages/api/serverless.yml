@@ -33,6 +33,11 @@ provider:
           - ''
           - - !ImportValue '${self:custom.sstApp}-TableArn'
             - '/index/*'
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource:
+        - !ImportValue 'DiscordRoleAssignFunctionArn'
   httpApi:
     cors:
       allowedOrigins:
@@ -62,7 +67,7 @@ custom:
   # Name of the SST app that's deploying our infrastructure
   sstApp: ${self:custom.stage}-scaffold-eth-infra
   customDomain:
-    domainName: ${self:custom.stage}.api.vorder.io
+    domainName: ${self:custom.stage}.xyz.vorder.io
     basePath: app
     endpointType: regional
     apiType: http

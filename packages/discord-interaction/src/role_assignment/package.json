@@ -1,0 +1,10 @@
+{
+  "name": "serverless-discord-bot.role_assignment",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "ytausch",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  }
+}
