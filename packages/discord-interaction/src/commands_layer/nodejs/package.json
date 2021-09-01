@@ -4,6 +4,7 @@
   "author": "ytausch",
   "license": "MIT",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "slash-create": "^4.0.1"
   }
 }

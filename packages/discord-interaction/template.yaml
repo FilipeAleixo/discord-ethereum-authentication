@@ -26,6 +26,7 @@ Resources:
           DISCORD_APP_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:app_id}}'
           DISCORD_PUBLIC_KEY: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:public_key}}'
           DISCORD_BOT_TOKEN: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:bot_token}}'
+          DISCORD_SERVER_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:server_id}}'
       Layers:
         - !Ref CommandsLayer
 
@@ -40,7 +41,7 @@ Resources:
   DiscordInteractionApi:
     Type: AWS::Serverless::HttpApi
     Properties:
-      StageName: prod
+      StageName: dev
 
   DiscordHandlerFunction:
     Type: AWS::Serverless::Function
@@ -49,7 +50,7 @@ Resources:
       Description: "Serverless Function to handle incoming Discord requests"
       Handler: index.lambdaHandler
       Events:
-        HelloWorld:
+        EthAuth:
           Type: HttpApi
           Properties:
             ApiId: !Ref DiscordInteractionApi
@@ -59,29 +60,31 @@ Resources:
         Variables:
           DISCORD_APP_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:app_id}}'
           DISCORD_PUBLIC_KEY: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:public_key}}'
+          DISCORD_BOT_TOKEN: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:bot_token}}'
+          DISCORD_SERVER_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:server_id}}'
       Layers:
         - !Ref CommandsLayer
 
   DiscordRoleAssignFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: discord-role-assignment
+      FunctionName: discord-role-assign
       CodeUri: ./src/role_assignment
       Description: "Serverless Function to set the role of a given user on Discord"
       Handler: index.lambdaHandler
       Environment:
         Variables:
           DISCORD_BOT_TOKEN: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:bot_token}}'
-          SERVER_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:server_id}}'
-          CHANNEL_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:channel_id}}'
-          ROLE_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:role_id}}'
+          DISCORD_SERVER_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:server_id}}'
+          DISCORD_CHANNEL_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:channel_id}}'
+          DISCORD_ROLE_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:role_id}}'
 
 Outputs:
   DiscordInteractionApi:
     Description: "API Gateway endpoint URL"
-    Value: !Sub "https://${DiscordInteractionApi}.execute-api.${AWS::Region}.amazonaws.com/prod/event"
-  DiscordRoleAssignFunctionArn:
-    Description: "The ARN of the lambda function that assigns the roles on discord"
+    Value: !Sub "https://${DiscordInteractionApi}.execute-api.${AWS::Region}.amazonaws.com/dev/event"
+  DiscordRoleAssignFnArn:
+    Description: "The ARN of the lambda function that assigns the roles on discord. Used to call that function after successful authentication."
     Value: !GetAtt DiscordRoleAssignFunction.Arn
     Export:
-      Name: DiscordRoleAssignFunctionArn
+      Name: DiscordRoleAssignFnArn

@@ -1,7 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
 import apiResponses from 'src/requests/apiResponses'
-
 import { authenticate, getAuthenticationChallenge } from '../lib/auth'
+import * as jwt from 'jsonwebtoken';
 
 /**
  * GET /sessions
@@ -43,14 +43,14 @@ export async function login(
 ): Promise<APIGatewayProxyResult> {
   const AWS = require("aws-sdk");
 
-  const callRoleAssignLambda = async () => {
+  const callRoleAssignLambda = async (userId) => {
 
     const lambda = new AWS.Lambda({region: "us-east-2"});
 
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const params = {
-        FunctionName: "discord-role-assignment",
-        Payload: JSON.stringify({userId: "INSER_USER_ID"})
+        FunctionName: "discord-role-assign",
+        Payload: JSON.stringify({ userId })
       }
       lambda.invoke(params, (err, results) => {
         if(err) reject(err);
@@ -60,15 +60,21 @@ export async function login(
   
   }
 
-
   try {
-    const { publicAddress, signature } = JSON.parse(event.body)
-    
-    
-    callRoleAssignLambda()
-
+    const { publicAddress, signature, userIdToken } = JSON.parse(event.body)
 
     const token = await authenticate(publicAddress, signature)
+    console.log(userIdToken);
+    // If no error was thrown, let's decode the JWT the user gave us (the one they received from discord)
+    // and get the respective discord user ID
+    const decoded = jwt.verify(userIdToken, process.env.JWT_SECRET);
+    console.log(decoded)
+    const userId = decoded.userId;
+    console.log(userId)
+
+    // Call the lambda function to assign the role to that user
+    const results = await callRoleAssignLambda(userId);
+    console.log(results);
 
     return apiResponses._200({ token })
   } catch (e) {

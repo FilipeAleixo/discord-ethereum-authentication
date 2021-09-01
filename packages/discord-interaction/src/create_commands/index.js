@@ -1,5 +1,6 @@
 const {once} = require('events');
 const CfnLambda = require('cfn-lambda');
+const fs = require("fs");
 
 // included in commands layer
 const {SlashCreator} = require('slash-create');
@@ -50,6 +51,7 @@ async function handleCreateOrUpdate() {
 }
 
 async function createCommands() {
+    writeEnvVariablesToLayer();
     const creator = new SlashCreator({
         applicationID: process.env.DISCORD_APP_ID,
         publicKey: process.env.DISCORD_PUBLIC_KEY,
@@ -69,4 +71,16 @@ async function createCommands() {
 
     // note that syncCommands() is asynchronous
     await once(creator, 'synced');
+}
+
+function writeEnvVariablesToLayer() {
+    // Layers can't access environment variables directly, so I'm using this hack
+    const envVariables = {
+      DISCORD_SERVER_ID: process.env.DISCORD_SERVER_ID,
+      DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
+    };
+    fs.writeFileSync(
+      "/tmp/.env",
+      JSON.stringify(envVariables)
+    );
 }

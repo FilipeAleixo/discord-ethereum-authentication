@@ -37,7 +37,7 @@ provider:
       Action:
         - lambda:InvokeFunction
       Resource:
-        - !ImportValue 'DiscordRoleAssignFunctionArn'
+        - !ImportValue 'DiscordRoleAssignFnArn'
   httpApi:
     cors:
       allowedOrigins:
@@ -67,7 +67,7 @@ custom:
   # Name of the SST app that's deploying our infrastructure
   sstApp: ${self:custom.stage}-scaffold-eth-infra
   customDomain:
-    domainName: ${self:custom.stage}.xyz.vorder.io
+    domainName: ${self:custom.stage}.api.vorder.io
     basePath: app
     endpointType: regional
     apiType: http

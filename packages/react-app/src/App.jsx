@@ -21,7 +21,7 @@ import {
   useUserSigner,
 } from "./hooks";
 // import Hints from "./Hints";
-import { ExampleUI, Hints, Subgraph } from "./views";
+import { DiscordAuth, Hints, Subgraph } from "./views";
 
 const { ethers } = require("ethers");
 /*
@@ -401,14 +401,14 @@ function App(props) {
               Hints
             </Link>
           </Menu.Item>
-          <Menu.Item key="/exampleui">
+          <Menu.Item key="/discord-auth">
             <Link
               onClick={() => {
-                setRoute("/exampleui");
+                setRoute("/discord-auth");
               }}
-              to="/exampleui"
+              to="/discord-auth"
             >
-              Example Authentication
+              Discord Authentication
             </Link>
           </Menu.Item>
           <Menu.Item key="/mainnetdai">
@@ -457,8 +457,8 @@ function App(props) {
               price={price}
             />
           </Route>
-          <Route path="/exampleui">
-            <ExampleUI
+          <Route path="/discord-auth">
+            <DiscordAuth
               address={address}
               userSigner={userSigner}
               mainnetProvider={mainnetProvider}
