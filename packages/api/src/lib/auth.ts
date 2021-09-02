@@ -1,7 +1,7 @@
 import { utils } from 'ethers'
 import { sign } from 'jsonwebtoken'
 
-const JWT_EXPIRATION_TIME = process.env.JWT_EXPIRATION_TIME
+const JWT_EXPIRATION_TIME = "30m"
 
 import {
   createProfile,

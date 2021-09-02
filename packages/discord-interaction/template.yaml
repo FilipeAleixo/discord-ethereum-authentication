@@ -7,7 +7,7 @@ Description: >
 Globals:
   Function:
     Runtime: nodejs14.x
-    Timeout: 3
+    Timeout: 5
 
 Resources:
   CommandsLayer:
@@ -27,6 +27,7 @@ Resources:
           DISCORD_PUBLIC_KEY: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:public_key}}'
           DISCORD_BOT_TOKEN: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:bot_token}}'
           DISCORD_SERVER_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:server_id}}'
+          JWT_SECRET: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:jwt_secret}}'
       Layers:
         - !Ref CommandsLayer
 
@@ -62,6 +63,7 @@ Resources:
           DISCORD_PUBLIC_KEY: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:public_key}}'
           DISCORD_BOT_TOKEN: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:bot_token}}'
           DISCORD_SERVER_ID: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:server_id}}'
+          JWT_SECRET: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:jwt_secret}}'
       Layers:
         - !Ref CommandsLayer
 

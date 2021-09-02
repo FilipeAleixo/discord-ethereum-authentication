@@ -8,7 +8,6 @@ package:
 plugins:
   - serverless-bundle # Package our functions with Webpack
   - serverless-offline
-  - serverless-dotenv-plugin # Load .env as environment variables
   - serverless-domain-manager
 
 provider:
@@ -53,10 +52,6 @@ provider:
         - OPTIONS
       maxAge: 3000
       allowCredentials: true
-    authorizers:
-      customAuthorizer:
-        type: request
-        functionName: authorize
   environment:
     DYNAMODB_TABLE: !ImportValue '${self:custom.sstApp}-TableName'
 
@@ -66,6 +61,7 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   # Name of the SST app that's deploying our infrastructure
   sstApp: ${self:custom.stage}-scaffold-eth-infra
+  secret: ${ssm:/aws/reference/secretsmanager/discord~true}
   customDomain:
     domainName: ${self:custom.stage}.api.vorder.io
     basePath: app
@@ -89,23 +85,8 @@ functions:
   login:
     handler: src/functions/handler.login
     environment:
-      JWT_SECRET: ${env:JWT_SECRET}
-      JWT_EXPIRATION_TIME: ${env:JWT_EXPIRATION_TIME}
+      JWT_SECRET: ${self:custom.secret.jwt_secret}
     events:
       - httpApi:
           path: /v1/sessions
           method: post
-  helloAuth:
-    handler: src/functions/handler.helloAuth
-    environment:
-      JWT_SECRET: ${env:JWT_SECRET}
-    events:
-      - httpApi:
-          path: /v1/helloAuth
-          method: get
-          authorizer:
-            name: customAuthorizer
-  authorize:
-    handler: src/functions/authorize.handler
-    environment:
-      JWT_SECRET: ${env:JWT_SECRET}

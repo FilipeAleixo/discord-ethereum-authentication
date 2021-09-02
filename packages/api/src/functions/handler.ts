@@ -17,7 +17,7 @@ export async function nonce(
 ): Promise<APIGatewayProxyResult> {
   const parameters = event.queryStringParameters
 
-  // todo input validation
+  console.log(parameters)
 
   const publicAddress = parameters['PublicAddress']
   try {
@@ -43,14 +43,14 @@ export async function login(
 ): Promise<APIGatewayProxyResult> {
   const AWS = require("aws-sdk");
 
-  const callRoleAssignLambda = async (userId) => {
+  const callRoleAssignLambda = async (userId, publicAddress) => {
 
     const lambda = new AWS.Lambda({region: "us-east-2"});
 
     return new Promise((resolve, reject) => {
       const params = {
         FunctionName: "discord-role-assign",
-        Payload: JSON.stringify({ userId })
+        Payload: JSON.stringify({ userId, publicAddress })
       }
       lambda.invoke(params, (err, results) => {
         if(err) reject(err);
@@ -62,19 +62,16 @@ export async function login(
 
   try {
     const { publicAddress, signature, userIdToken } = JSON.parse(event.body)
-
+    
+    console.log(process.env.JWT_SECRET);
     const token = await authenticate(publicAddress, signature)
-    console.log(userIdToken);
     // If no error was thrown, let's decode the JWT the user gave us (the one they received from discord)
     // and get the respective discord user ID
     const decoded = jwt.verify(userIdToken, process.env.JWT_SECRET);
-    console.log(decoded)
     const userId = decoded.userId;
-    console.log(userId)
 
     // Call the lambda function to assign the role to that user
-    const results = await callRoleAssignLambda(userId);
-    console.log(results);
+    const results = await callRoleAssignLambda(userId, publicAddress);
 
     return apiResponses._200({ token })
   } catch (e) {
@@ -97,19 +94,4 @@ export function defaultCORS(event: APIGatewayEvent): APIGatewayProxyResult {
     body: JSON.stringify({}),
   }
   return response
-}
-
-/**
- * GET /helloAuth
- *
- * Returns a message given a valid auth header
- * @method helloAuth
- */
-export async function helloAuth(
-  event: APIGatewayEvent
-): Promise<APIGatewayProxyResult> {
-  console.log({ event })
-
-  const user = event.requestContext.authorizer.lambda.user
-  return apiResponses._200({ message: `Hello ${user} you are authenticated` })
 }

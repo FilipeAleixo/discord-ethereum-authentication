@@ -6,5 +6,8 @@
   "license": "MIT",
   "devDependencies": {
     "slash-create": "^4.0.1"
+  },
+  "dependencies": {
+    "discord.js": "^12.5.3"
   }
 }
