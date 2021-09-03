@@ -24,9 +24,7 @@ export const login = async ({ signer, userIdToken }) => {
     },
   });
 
-  console.log({ loginResult });
-
-  return loginResult.token;
+  return loginResult;
 };
 
 export const logout = async ({setJwtAuthToken}) => setJwtAuthToken(null)
