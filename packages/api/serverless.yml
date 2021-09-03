@@ -7,7 +7,6 @@ package:
 
 plugins:
   - serverless-bundle # Package our functions with Webpack
-  - serverless-offline
   - serverless-domain-manager
 
 provider:

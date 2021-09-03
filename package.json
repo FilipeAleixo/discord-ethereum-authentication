@@ -54,7 +54,10 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/hardhat",
+      "packages/react-app",
+      "packages/serverless-infrastructure",
+      "packages/subgraph"
     ],
     "nohoist": [
       "**/eslint",
