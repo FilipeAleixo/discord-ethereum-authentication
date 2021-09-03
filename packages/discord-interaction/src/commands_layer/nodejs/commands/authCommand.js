@@ -18,7 +18,6 @@ module.exports = class AuthCommand extends SlashCommand {
     }
 
     async run(ctx) {
-      //await ctx.acknowledge();
       const token = jwt.sign({ userId: ctx.user.id }, envVariables.JWT_SECRET, {
         expiresIn: JWT_EXPIRATION_TIME,
       });

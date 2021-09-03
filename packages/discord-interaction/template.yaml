@@ -7,7 +7,7 @@ Description: >
 Globals:
   Function:
     Runtime: nodejs14.x
-    Timeout: 5
+    Timeout: 3
 
 Resources:
   CommandsLayer:

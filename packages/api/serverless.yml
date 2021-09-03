@@ -61,7 +61,6 @@ custom:
   stage: ${opt:stage, self:provider.stage}
   # Name of the SST app that's deploying our infrastructure
   sstApp: ${self:custom.stage}-scaffold-eth-infra
-  secret: ${ssm:/aws/reference/secretsmanager/discord~true}
   customDomain:
     domainName: ${self:custom.stage}.api.vorder.io
     basePath: app
@@ -85,7 +84,7 @@ functions:
   login:
     handler: src/functions/handler.login
     environment:
-      JWT_SECRET: ${self:custom.secret.jwt_secret}
+      JWT_SECRET: '{{resolve:secretsmanager:/dev/serverless_discord_bot/discord:SecretString:jwt_secret}}'
     events:
       - httpApi:
           path: /v1/sessions

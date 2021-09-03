@@ -62,19 +62,19 @@ export async function login(
 
   try {
     const { publicAddress, signature, userIdToken } = JSON.parse(event.body)
-    
-    console.log(process.env.JWT_SECRET);
+
     const token = await authenticate(publicAddress, signature)
     // If no error was thrown, let's decode the JWT the user gave us (the one they received from discord)
     // and get the respective discord user ID
     const decoded = jwt.verify(userIdToken, process.env.JWT_SECRET);
     const userId = decoded.userId;
+    console.log(`Validation successful for userId: ${userId}, with publicAddress: ${publicAddress}`)
 
     // Call the lambda function to assign the role to that user
     const results = await callRoleAssignLambda(userId, publicAddress);
-
     return apiResponses._200({ token })
   } catch (e) {
+    console.log(`Error: ${e.message}`)
     return apiResponses._400({ error: e.message })
   }
 }
