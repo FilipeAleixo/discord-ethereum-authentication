@@ -61,14 +61,23 @@ We'll now go through the deployment of the infrastructure responsible for intera
 - `cd` back into _packages/discord-interaction/_ and do `sam build`. Once the build is complete do `sam deploy --guided` and choose the following parameters:
 
     > Stack Name [dev-discord-interaction]: dev-discord-interaction
+
     > AWS Region [us-east-2]: us-east-2
+
     > #Shows you resources changes to be deployed and require a 'Y' to initiate deploy
+
     > Confirm changes before deploy [y/N]: n
+
     > #SAM needs permission to be able to create roles to connect to the resources in your template
+
     > Allow SAM CLI IAM role creation [Y/n]: y
+
     > DiscordHandlerFunction may not have authorization defined, Is this okay? [y/N]: y
+
     > Save arguments to configuration file [Y/n]: y
+
     > SAM configuration file [samconfig.toml]: samconfig.toml
+    
     > SAM configuration environment [default]: default
 
 
