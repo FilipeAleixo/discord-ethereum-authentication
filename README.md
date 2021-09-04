@@ -1,4 +1,4 @@
-# discord-ethereum-authentication
+# Discord Ethereum Authentication 
 
 A Discord bot that enables you to authenticate users with Ethereum. The infrastructure is fully serverless and based on [AWS Lambda](https://aws.amazon.com/pt/lambda/).
 
