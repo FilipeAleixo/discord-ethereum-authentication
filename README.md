@@ -77,7 +77,7 @@ We'll now go through the deployment of the infrastructure responsible for intera
     > Save arguments to configuration file [Y/n]: y
 
     > SAM configuration file [samconfig.toml]: samconfig.toml
-    
+
     > SAM configuration environment [default]: default
 
 
@@ -106,7 +106,7 @@ In the root folder run in two separate command prompts:
 - `yarn react-app:start` to start the local react app server.
 - `yarn chain` to start the local chain server. Note: This example runs with a local chain, but you can set the chain to whatever you want. Just edit the variable __targetNetwork__ in _packages/react-app/src/App.jsx_ to change to a different chain.
 
-Once the the local react app and chain servers are ready all is set up to try the boy.
+Once the the local react app and chain servers are ready all is set up to try the bot.
 
 1. Call the command `/eth-auth` in the channel.
 2. Click the link that the bot gives you.
