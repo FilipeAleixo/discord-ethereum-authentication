@@ -1,224 +1,111 @@
-https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot
+# discord-ethereum-authentication
 
-------
+A Discord bot that enables you to authenticate users with Ethereum. The infrastructure is fully serverless and based on [AWS Lambda](https://aws.amazon.com/pt/lambda/).
 
+The bot is based on:
+1. [austintgriffith/scaffold-eth/serverless-auth](https://github.com/austintgriffith/scaffold-eth/tree/serverless-auth) to handle the Ethereum authentication flow.
+2. [ytausch/serverless-discord-bot](https://github.com/ytausch/serverless-discord-bot) for the interaction with  Discord  through slash commands.
 
-# 🏗 Scaffold-ETH
-
-> everything you need to build on Ethereum! 🚀
-
-# Login with Ethereum, Scaffold-Eth, and Serverless
-
-## Intro
-
-The topic of 'Login with Ethereum' came up during Vitalik's talk at EthCC.https://youtu.be/oLsb7clrXMQ?t=1450
-
-![](https://i.imgur.com/DHWDbcb.jpg)
-
-I wanted to demonstrate how easy this is to implement in practice using a serverless backend and a simple web3 enabled frontend.
-
-This guide demonstrates how to integrate 'log in with Ethereum' with a serverless API on AWS.
-
-The front end is based on Scaffold-ETH.
-
-
-
-https://user-images.githubusercontent.com/4401444/127770033-506de912-243b-4d8d-8e62-0a186733a0d9.mov
-
-
-
-### How it works
-
-The API implements a challenge response pattern to confirm the use controls the specified Ethereum address.
-
-1. User requests a challenge from the API
-
-2. The API stores the challenge and retuns it to the user
-
-3. The user signs the challenge and returns it to the API
-
-4. The API validates the signature. If the signature is valid, it signs a JWT and returns it to the user
-
-The JWT can be used for subsequent authenticated requests until it expires.
-
-## Hands on
-
-### Prerequesites
-
-* AWS Account with console and programmatic access
-* A domain name registered with AWS
-* Local AWS credentials profile
-* node version 14
-
-### Install dependencies
-
-Run `yarn install` in the root directory
-
-### Populate credentials file
-
-`./aws/credentials`
-
-```
-[scaffold-eth]
-aws_access_key_id = YOUR_KEY_ID
-aws_secret_access_key = YOUR_SECRET_KEY
-
-```
-
-
-### Deploy the infra
-
-`npm run deploy`
-
-```
-> infrastructure@0.1.0 deploy /Users/isaacpatka/experiments/web3-serverless-auth/scaffold-eth/packages/serverless-infrastructure
-> sst deploy
-
-Preparing @serverless-stack/resources
-Linting source
-=============
-
-
-Detected tsconfig.json
-Compiling TypeScript
-Deploying stacks
-dev-scaffold-eth-infra-dynamodb: deploying...
-Checking deploy status...
-dev-scaffold-eth-infra-dynamodb | CREATE_IN_PROGRESS | AWS::CloudFormation::Stack | dev-scaffold-eth-infra-dynamodb
-dev-scaffold-eth-infra-dynamodb | CREATE_IN_PROGRESS | AWS::CDK::Metadata | CDKMetadata
-dev-scaffold-eth-infra-dynamodb | CREATE_IN_PROGRESS | AWS::DynamoDB::Table | TableCD117FA1
-dev-scaffold-eth-infra-dynamodb | CREATE_IN_PROGRESS | AWS::DynamoDB::Table | TableCD117FA1
-dev-scaffold-eth-infra-dynamodb | CREATE_IN_PROGRESS | AWS::CDK::Metadata | CDKMetadata
-dev-scaffold-eth-infra-dynamodb | CREATE_COMPLETE | AWS::CDK::Metadata | CDKMetadata
-Checking deploy status...
-Checking deploy status...
-Checking deploy status...
-Checking deploy status...
-Checking deploy status...
-dev-scaffold-eth-infra-dynamodb | CREATE_COMPLETE | AWS::DynamoDB::Table | TableCD117FA1
-dev-scaffold-eth-infra-dynamodb | CREATE_COMPLETE | AWS::CloudFormation::Stack | dev-scaffold-eth-infra-dynamodb
-
- ✅  dev-scaffold-eth-infra-dynamodb
-
-
-Stack dev-scaffold-eth-infra-dynamodb
-  Status: deployed
-  Outputs:
-    TableName: dev-scaffold-eth-infra-dynamodb-TableCD117FA1-1L2JMCWHF9JYK
-    TableArn: arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/dev-scaffold-eth-infra-dynamodb-TableCD117FA1-1L2JMCWHF9JYK
-  Exports:
-    dev-scaffold-eth-infra-TableName: dev-scaffold-eth-infra-dynamodb-TableCD117FA1-1L2JMCWHF9JYK
-    dev-scaffold-eth-infra-TableArn: arn:aws:dynamodb:us-east-1:ACCOUNT_ID:table/dev-scaffold-eth-infra-dynamodb-TableCD117FA1-1L2JMCWHF9JYK
-
-```
-
-
-![](https://i.imgur.com/QiW3igj.png)
-
-## Deploy the API
-
-### Request a certificate
-
-![](https://i.imgur.com/d6Naabq.png)
-
-### Create the custom API Gateway domain
-
-`npx serverless create_domain`
-
-```
-Serverless: DOTENV: Loading environment variables from .env:
-Serverless: 	 - JWT_SECRET
-Serverless: 	 - SLS_DEBUG
-Serverless: 	 - JWT_EXPIRATION_TIME
-Serverless: Load command create_domain
-Serverless: Load command delete_domain
-Serverless: Load command login
-Serverless: Load command logout
-Serverless: Load command generate-event
-Serverless: Load command test
-Serverless: Load command dashboard
-Serverless: Load command output
-Serverless: Load command output:get
-Serverless: Load command output:list
-Serverless: Load command param
-Serverless: Load command param:get
-Serverless: Load command param:list
-Serverless: Load command studio
-Serverless: Invoke create_domain
-Serverless Domain Manager: Error:  dev.ext-api.scaffoldeth.xyz does not exist
-Serverless Domain Manager: Info: Custom domain dev.ext-api.scaffoldeth.xyz was created.
-New domains may take up to 40 minutes to be initialized.
-```
-
-### Deploy
-
-`npx serverless deploy`
-
-```
-Service Information
-service: scaffold-eth-api
-stage: dev
-region: us-east-1
-stack: scaffold-eth-api-dev
-resources: 34
-api keys:
-  None
-endpoints:
-  OPTIONS - https://l1nnhoyail.execute-api.us-east-1.amazonaws.com/{proxy+}
-  GET - https://l1nnhoyail.execute-api.us-east-1.amazonaws.com/v1/sessions
-  POST - https://l1nnhoyail.execute-api.us-east-1.amazonaws.com/v1/sessions
-  GET - https://l1nnhoyail.execute-api.us-east-1.amazonaws.com/v1/helloAuth
-functions:
-  defaultCORS: scaffold-eth-api-dev-defaultCORS
-  nonce: scaffold-eth-api-dev-nonce
-  login: scaffold-eth-api-dev-login
-  helloAuth: scaffold-eth-api-dev-helloAuth
-  authorize: scaffold-eth-api-dev-authorize
-layers:
-  None
-Serverless Domain Manager: Info: Found apiId: l1nnhoyail for dev.ext-api.scaffoldeth.xyz
-Serverless Domain Manager: Info: Created API mapping 'app' for dev.ext-api.scaffoldeth.xyz
-Serverless Domain Manager: Summary: Distribution Domain Name
-Serverless Domain Manager:    Domain Name: dev.ext-api.scaffoldeth.xyz
-Serverless Domain Manager:    Target Domain: d-0nxko42bib.execute-api.us-east-1.amazonaws.com
-Serverless Domain Manager:    Hosted Zone Id: YOUR_HOSTED_ZONE
-Serverless: Invoke aws:deploy:finalize
-```
-
-### Test out the nonce challenge
-
-`GET https://dev.ext-api.scaffoldeth.xyz/app/v1/sessions?PublicAddress=0x83BC06079538264Cc18829c5534387c69820A4E6`
-
-![](https://i.imgur.com/di0RXfg.png)
-
-
-### Test an authenticated endpoint
-
-`GET https://dev.ext-api.scaffoldeth.xyz/app/v1/helloAuth`
-
-![](https://i.imgur.com/UvznWme.png)
-
-## Test out the front end
-
-#### Start the app with `yarn react-app:start`
-
-#### Navigate to `Example Authentication`
-
-![](https://i.imgur.com/XFCO1yP.png)
-
-#### Log in (signs a challenge in the background)
-
-![](https://i.imgur.com/2UcFEqs.png)
-
-#### Try decoding the JWT and see what it contains
-
-
-This shows that we are given an auth token for the address specified, and the token expires in 30 minutes
-
-![](https://i.imgur.com/dhAv8h9.png)
-
-#### Test the authenticated endpoint
-
-
-![](https://i.imgur.com/3VrVUw7.png)
-
+![Discord Ethereum Authentication GIF Demo](img/discord-ethereum-authentication-demo.gif)
+
+Contents
+========
+ * [Requirements](#prerequisites)
+ * [Setup](#setup)
+ * [Usage](#usage)
+ * [Future improvements](#future-improvements)
+
+### Prerequisites
+---
+
+- A Discord account and a server where you're an administrator
+- AWS Account with console and programmatic access
+- A domain name registered with AWS
+- Local AWS credentials profile
+- Node version 14
+- [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
+
+### Setup
+---
+##### Discord
+- Create a Discord server if you don't have one already. Create the role you want to give the user after they've authenticated with Ethereum. For example, I named my role _eth-authenticated_.
+- [Set up an application for your bot](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
+- Add the bot to your server by replacing your application's client ID in the following link https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot. Open that link in the browser and choose your server to add the bot.
+
+##### AWS
+
+###### IAM User Credentials
+- Create an access key pair for your AWS user as explained [here](https://www.youtube.com/watch?v=JvtmmS9_tfU) (this user must have administrator access).
+- Create file `.aws/credentials` with the same structure as `.aws/credentials.example` (including the "[scaffold-eth]" part), and fill in the parameters `aws_access_key_id` and `aws_secret_access_key` with the values you obtained from the previous step.
+
+###### Certificate for the API endpoint
+
+- Create a certificate in [Certificate Manager](https://aws.amazon.com/pt/certificate-manager/) for the API endpoint you'll later deploy to be linked to. For instance, mine is at dev.api.vorder.io. Don't forget to add the DNS record to your domain as mentioned in the verification prompt that shows up once you create the certificate. You won't be able to deploy the __Ethereum Authentication Infrastructure__ correctly without the certificate Status showing up as _Issued_, so wait for it to complete before doing that part.
+
+###### Secrets Manager
+All the secrets necessary for the bot to run are retrieved from an [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) secret named `/dev/serverless_discord_bot/discord` you have to create that secret manually before deploying the stack. When creating the secret choose the option _Other type of secrets_.
+
+The secret must contain the following key/value pairs:
+- `app_id`, from the application you've created in the Discord Setup.
+- `public_key`, from the application you've created in the Discord Setup.
+- `bot_token`, from the application you've created in the Discord Setup.
+- `server_id`- Right-click your server on Discord and select __Copy ID__ to get this.
+- `channel_id`. Right-click your channel on Discord and select __Copy ID__ to get this.
+- `role_id`. Right-click the role you've created in the Discord setup and select __Copy ID__ to get this. You can see your server's roles by right-clicking your server > __Server Settings__ > __Roles__.
+- `jwt_secret`. This is the secret which will be used to encode/decode the authentication JWTs. Anything works here, but choose something strong enough.
+
+##### Discord Interaction Infrastructure
+We'll now go through the deployment of the infrastructure responsible for interacting with Discord. This includes creating the slash-command and handling the role assignment when a user is successfuly authenticated. 
+
+- `cd` into _packages/discord-interaction/src/commands_layer/nodejs_ and install the layer dependencies using `npm install`. This is the only install required for this infrastructure. The rest is auto-installed by SAM.
+- `cd` back into _packages/discord-interaction/_ and do `sam build`. Once the build is complete do `sam deploy --guided` and choose the following parameters:
+
+    > Stack Name [dev-discord-interaction]: dev-discord-interaction
+    > AWS Region [us-east-2]: us-east-2
+    > #Shows you resources changes to be deployed and require a 'Y' to initiate deploy
+    > Confirm changes before deploy [y/N]: n
+    > #SAM needs permission to be able to create roles to connect to the resources in your template
+    > Allow SAM CLI IAM role creation [Y/n]: y
+    > DiscordHandlerFunction may not have authorization defined, Is this okay? [y/N]: y
+    > Save arguments to configuration file [Y/n]: y
+    > SAM configuration file [samconfig.toml]: samconfig.toml
+    > SAM configuration environment [default]: default
+
+
+- Once the deployment is complete copy the __API Gateway endpoint URL__ stack output and paste it in the Discord Developer Portal as __Interactions Endpoint URL__.  If Discord was able to successfuly ping our Lambda you'll get a message saying "_All your edits have been carefully recorded_" at the top of the screen.
+- Check that you now have a stack called _dev-discord-interaction_ in Cloudformation. Cross your fingers 🤞 and call the command `/eth-auth` in your Discord channel. If everything went right with the deploy, the bot should respond with a URL.
+
+##### Ethereum Authentication Infrastructure
+Now let's deploy the API that will talk to the front-end and handle the Ethereum authentication flow.
+
+- In the root folder run `yarn install`. You'll get quite a lot of warnings regarding workspace dependencies, but those are harmless. Note: All the packages for this infrastructure (and also for the front-end and the chain) are installed through `yarn` workspaces. The __api__ package dependencies will later be installed using `npm`.
+
+###### DynamoDB infrastructure
+- `cd` into _packages/serverless-infrastructure_ and run `npm run deploy`. After this runs, you should now have a stack called _dev-scaffold-eth-infra-dynamodb_ in Cloudformation.
+
+###### Authentication API infrastructure
+- `cd` into _packages/api_ and install the dependencies using `npm install`.
+- Change the URL that will be linked to your API in the following files - this is the same URL that you've created the Certificate above for, e.g. for me it's dev.api.vorder.io (I probably should have put this in an environment variable but oh well):
+  1. In the file _packages/api/serverless.yml_, change the variable __domainName__ so that it matches your URL. __${self:custom.stage}__ is set to _dev_ by default already.
+  2. In the file _packages/react-app/src/util_ change __baseUrl__ to that same URL so that the front-end knows where the API is located.
+- Link your API to the URL by running `npx serverless create_domain`.
+- Finally, deploy the infrastucture using `npm run deploy`. 
+
+### Usage
+
+In the root folder run in two separate command prompts:
+- `yarn react-app:start` to start the local react app server.
+- `yarn chain` to start the local chain server. Note: This example runs with a local chain, but you can set the chain to whatever you want. Just edit the variable __targetNetwork__ in _packages/react-app/src/App.jsx_ to change to a different chain.
+
+Once the the local react app and chain servers are ready all is set up to try the boy.
+
+1. Call the command `/eth-auth` in the channel.
+2. Click the link that the bot gives you.
+3. Click the login button at the upper right corner and login into your metamask wallet (note: you'll probably have to change the network on metamask to localhost).
+4. Once you've logged in, click the __Authenticate__ button. You're prompted by metamask for a signature. After you provide the signature, if all went well, you'll receive a message from the bot saying that you've been sucessfully authenticated and you should now have the new role attributed to you in the Discord server.
+
+### Future Improvements
+---
+- The set up has quite a lot of steps and streamlining it further would be ideal.
+- Using SAM for the deployment of all the serverless infrastructure would be best. I developed this project for an hackathon and had limited time, so had to work with the repos I had available. If there's interest I'll port the API infrastructure to SAM.
+- After the authentication there are many possibilities to what can be done. For example you might wish to check what balance the user has in their wallet or check which tokens they have for some specific purpose.
