@@ -115,6 +115,7 @@ Once the the local react app and chain servers are ready all is set up to try th
 
 ### Future Improvements
 ---
+- Remove hardcoding for `server_id` and `channel_id`, and make them dynamic depending on the server the bot is responding to.
 - The set up has quite a lot of steps and streamlining it further would be ideal.
 - Using SAM for the deployment of all the serverless infrastructure would be best. I developed this project for an hackathon and had limited time, so had to work with the repos I had available. If there's interest I'll port the API infrastructure to SAM.
 - After the authentication there are many possibilities to what can be done. For example you might wish to check what balance the user has in their wallet or check which tokens they have for some specific purpose.
