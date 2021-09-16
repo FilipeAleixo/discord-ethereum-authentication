@@ -8,6 +8,11 @@ The bot is based on:
 
 ![Discord Ethereum Authentication GIF Demo](img/discord-ethereum-authentication-demo.gif)
 
+Donations
+========
+If you find this repository useful, any ETH, NFT, or other tokens are greatly appreciated.
+ETH Address: `0xa8624937a437F53382d4B48f1AE13E0CF5C9F8cB`
+
 Contents
 ========
  * [Requirements](#prerequisites)
