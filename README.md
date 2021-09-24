@@ -35,7 +35,9 @@ Contents
 ##### Discord
 - Create a Discord server if you don't have one already. Create the role you want to give the user after they've authenticated with Ethereum. For example, I named my role _eth-authenticated_.
 - [Set up an application for your bot](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
-- Add the bot to your server by replacing your application's client ID in the following link https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot. Open that link in the browser and choose your server to add the bot.
+- Select the following boxes in the OAuth2 tab. Open the link marked in red and choose your server to add the bot.
+
+![Discord OAuth2 Permissions](img/discord-oauth2-permissions.png)
 
 ##### AWS
 
