@@ -8,6 +8,6 @@
     "cfn-lambda": "^5.1.0"
   },
   "devDependencies": {
-    "slash-create": "^4.0.1"
+    "slash-create": "^4.1.1"
   }
 }
