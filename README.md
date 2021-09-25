@@ -33,7 +33,7 @@ Contents
 ### Setup
 ---
 ##### Discord
-- Create a Discord server if you don't have one already. Create the role you want to give the user after they've authenticated with Ethereum. For example, I named my role _eth-authenticated_.
+- Create a Discord server if you don't have one already. Create the role you want to give the user after they've authenticated with Ethereum. For example, I named my role _eth-authenticated_. __Important__: this role must be below in the hierarchy than the one for the bot you create in the next step, otherwise you'll get a _missing access_ error. See [here](https://support.discord.com/hc/en-us/articles/214836687-Role-Management-101) how to move a role up or down in the hierarchy.
 - [Set up an application for your bot](https://discordjs.guide/preparations/setting-up-a-bot-application.html#creating-your-bot)
 - Select the following boxes in the OAuth2 tab. Open the link marked in red and choose your server to add the bot.
 
